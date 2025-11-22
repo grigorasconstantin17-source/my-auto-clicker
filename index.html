@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>My Auto Clicker</title>
+
+<style>
+    body {
+        margin: 0;
+        font-family: Arial, sans-serif;
+        background: linear-gradient(135deg, #4a90e2, #9013fe);
+        color: white;
+        text-align: center;
+        padding: 20px;
+    }
+
+    .container {
+        background: rgba(255, 255, 255, 0.15);
+        padding: 20px;
+        border-radius: 15px;
+        max-width: 450px;
+        margin: auto;
+        box-shadow: 0 0 15px rgba(0,0,0,0.3);
+    }
+
+    button {
+        width: 100%;
+        padding: 15px;
+        margin: 10px 0;
+        font-size: 20px;
+        border: none;
+        border-radius: 10px;
+        cursor: pointer;
+        color: white;
+        font-weight: bold;
+        transition: 0.2s;
+    }
+
+    #clickBtn { background: #00C853; }
+    #upgradeBtn { background: #FFD600; color: black; }
+    #autoBtn { background: #FF3D00; }
+    #rebirthBtn { background: #6200EA; }
+
+    button:active {
+        transform: scale(0.97);
+    }
+
+    @media (max-width: 600px) {
+        button { font-size: 18px; padding: 14px; }
+        h1 { font-size: 26px; }
+    }
+</style>
+</head>
+
+<body>
+
+<h1>🔥 My Auto Clicker</h1>
+
+<div class="container">
+    <h2>Puncte: <span id="points">0</span></h2>
+    <h3>Putere click: <span id="clickPower">1</span></h3>
+    <h3>Auto-clicker: <span id="autoPower">0</span> / sec</h3>
+
+    <button id="clickBtn" onclick="addPoints()">CLICK!</button>
+    <button id="upgradeBtn" onclick="buyUpgrade()">Cumpără +1 Click (100)</button>
+    <button id="autoBtn" onclick="buyAuto()">Cumpără AutoClick (+1/sec = 200)</button>
+    <button id="rebirthBtn" onclick="rebirth()">Reîncarnare (1M puncte)</button>
+</div>
+
+<script>
+    // ---------- VARIABILE SALVATE ----------
+    let points = Number(localStorage.getItem("points")) || 0;
+    let clickPower = Number(localStorage.getItem("clickPower")) || 1;
+    let autoPower = Number(localStorage.getItem("autoPower")) || 0;
+    let rebirthCount = Number(localStorage.getItem("rebirthCount")) || 0;
+
+    // Funcție de actualizare UI
+    function updateUI() {
+        document.getElementById("points").textContent = points;
+        document.getElementById("clickPower").textContent = clickPower;
+        document.getElementById("autoPower").textContent = autoPower;
+
+        // Verifică dacă userul a ajuns la 1 milion de puncte pentru reîncarnare
+        document.getElementById("rebirthBtn").disabled = points < 1000000;
+
+        // Salvare automată în localStorage
+        localStorage.setItem("points", points);
+        localStorage.setItem("clickPower", clickPower);
+        localStorage.setItem("autoPower", autoPower);
+        localStorage.setItem("rebirthCount", rebirthCount);
+    }
+
+    // ---------- CLICK NORMAL ----------
+    function addPoints() {
+        points += clickPower * 10;  // 10 puncte per click
+        updateUI();
+    }
+
+    // ---------- UPGRADE CLICK ----------
+    function buyUpgrade() {
+        if (points >= 100) {
+            points -= 100;
+            clickPower += 1;
+            updateUI();
+        } else {
+            alert("Ai nevoie de 100 puncte!");
+        }
+    }
+
+    // ---------- AUTO CLICKER ----------
+    function buyAuto() {
+        if (points >= 200) {
+            points -= 200;
+            autoPower += 1;
+            updateUI();
+        } else {
+            alert("Ai nevoie de 200 puncte!");
+        }
+    }
+
+    // ---------- REÎNCARNARE (1M puncte) ----------
+    function rebirth() {
+        if (points >= 1000000) {
+            points = 0;  // Resetează punctele
+            clickPower += 10;  // Îți crește puterea de click
+            autoPower += 5;  // Îți crește auto-click-ul
+            rebirthCount += 1;  // Crește numărul de reîncarnări
+            alert("Ai reînceput jocul cu bonusuri!");
+            updateUI();
+        } else {
+            alert("Ai nevoie de 1 milion de puncte pentru a reîncepe!");
+        }
+    }
+
+    // Auto-update la fiecare secundă
+    setInterval(() => {
+        points += autoPower;
+        updateUI();
+    }, 1000);
+
+    // Inițializare UI
+    updateUI();
+</script>
+
+</body>
+</html>

@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>My Auto Clicker</title>
+</head>
+<body>
+
+    <!-- ...existing code... -->
+    <div style="background-color: rgb(127, 6, 214); padding: 20px; color: white; max-width:400px;">
+        <h2>Points: <span id="score">0</span></h2>
+        <p>Clicks per click: <strong id="clicksPerClick">1</strong></p>
+        <button id="clickBtn">Click me</button>
+
+        <hr style="border-color: rgba(255,255,255,0.2)" />
+
+        <h3>Shop</h3>
+        <p>Upgrade: +1 click per purchase</p>
+        <p>Cost: <strong id="upgradeCost">100</strong> points</p>
+        <button id="buyUpgradeBtn">Buy +1 click</button>
+        <p id="shopMsg" style="margin-top:8px;"></p>
+    </div>
+    <!-- ...existing code... -->
+
+    <script>
+        // ...existing code...
+        const scoreEl = document.getElementById('score');
+        const clicksPerClickEl = document.getElementById('clicksPerClick');
+        const btn = document.getElementById('clickBtn');
+        const buyBtn = document.getElementById('buyUpgradeBtn');
+        const upgradeCostEl = document.getElementById('upgradeCost');
+        const shopMsg = document.getElementById('shopMsg');
+
+        let score = 0;
+        let clicksPerClick = 1;
+        const upgradeCost = 100; // cost per upgrade (fixed as requested)
+
+        function updateUI() {
+            scoreEl.textContent = score;
+            clicksPerClickEl.textContent = clicksPerClick;
+            upgradeCostEl.textContent = upgradeCost;
+            buyBtn.disabled = score < upgradeCost;
+        }
+
+        btn.addEventListener('click', () => {
+            score += clicksPerClick;
+            updateUI();
+            shopMsg.textContent = '';
+        });
+
+        buyBtn.addEventListener('click', () => {
+            if (score >= upgradeCost) {
+                score -= upgradeCost;
+                clicksPerClick += 1;
+                updateUI();
+                shopMsg.textContent = 'Purchase successful: +1 click!';
+            } else {
+                shopMsg.textContent = 'Not enough points.';
+            }
+        });
+
+        // initialize UI state
+        updateUI();
+        // ...existing code...
+    </script>
+
+</body>
+</html>
